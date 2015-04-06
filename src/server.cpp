@@ -163,6 +163,10 @@ void Server::sendResult(Result result) {
     this->sendPersonList = result.persons;
     this->sendPersonNum = this->sendPersonList.size();
     this->sendNum = -1;
+    QDataStream sendOut(&outBlock, QIODevice::WriteOnly);
+    sendOut << this->sendPersonNum;
+    clientConnection->write(outBlock, outBlock.size());
+    outBlock.resize(0);
     qDebug() << "sendResult init. sendNum is" << this->sendNum;
     sendPicture(result);
 }
