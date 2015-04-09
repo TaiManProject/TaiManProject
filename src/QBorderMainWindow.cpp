@@ -423,6 +423,7 @@ void QBorderMainWindow::performFaceVerification(int isSketch) {
             commonTool.log(QString("partial %1.").arg(partial.d));
             partialFaceVerificationResult.push_back(partial);
             person.setPartial(partial);
+            person.setSimilarities(similarities);
             persons.push_back(person);
             //
         }
@@ -468,6 +469,7 @@ void QBorderMainWindow::performFaceVerification(int isSketch) {
                 name = name + numstr + ".jpg";
                 int index = sortedFaceVerificationResult.at(i).i;
                 cv::imwrite(name, wantedPersons.at(index));
+                persons.at(index).setLandmarks(wantedPersonsLandmarkPointsList.at(index));
                 persons.at(index).setPhotoPath(name);
                 result.persons.push_back(persons.at(index));
             }
@@ -480,6 +482,7 @@ void QBorderMainWindow::performFaceVerification(int isSketch) {
                 int index = sortedPartialFaceVerificationResult.at(i).i;
                 cv::imwrite(name, wantedPersons.at(index));
                 persons.at(index).setPhotoPath(name);
+                persons.at(index).setLandmarks(wantedPersonsLandmarkPointsList.at(index));
                 result.persons.push_back(persons.at(index));
             }
         }

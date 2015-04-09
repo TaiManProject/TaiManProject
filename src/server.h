@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QFile>
+#include<opencv/cv.h>
 #include"result.h"
 
 QT_BEGIN_NAMESPACE

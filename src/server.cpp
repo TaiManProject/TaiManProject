@@ -151,8 +151,18 @@ void Server::sendPerson() {
         QDataStream sendOut(&outBlock, QIODevice::WriteOnly);
 //        QByteArray msg = QString::fromStdString(p.getInfo()).toUtf8();
         QByteArray msg = QByteArray(p.getInfo().c_str());
-        qDebug() << msg.size() << msg<< totalSendBytes;
-        sendOut /*<< msg.size() */<< msg<< totalSendBytes;
+        qDebug() << msg.size() << msg << totalSendBytes;
+        std::vector<double> similarities = p.getSimilarities();
+        sendOut /*<< msg.size() */<< msg  << (int)similarities.size();
+        for(int i = 0; i < similarities.size(); i++) {
+            sendOut << similarities.at(i);
+        }
+        std::vector<cv::Point2d> landmarks = p.getLandmarks();
+        sendOut << (int)landmarks.size();
+        for(int i = 0; i < landmarks.size(); i++) {
+            sendOut<<(int)landmarks.at(i).x << (int)landmarks.at(i).y;
+        }
+        sendOut << totalSendBytes;
         clientConnection->write(outBlock, outBlock.size());
         bytesToWrite = totalSendBytes ;
         outBlock.resize(0);

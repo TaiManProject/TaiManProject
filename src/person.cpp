@@ -41,3 +41,19 @@ void Person::setPhotoPath(std::string photoPath){
 std::string Person::getPhotoPath() {
     return this->photoPath;
 }
+
+void Person::setSimilarities(std::vector<double> similarities) {
+    this->similarities = similarities;
+}
+
+std::vector<double> Person::getSimilarities() {
+    return this->similarities;
+}
+
+void Person::setLandmarks(std::vector<cv::Point2d> landmarks) {
+    this->landmarks = landmarks;
+}
+
+std::vector<cv::Point2d> Person::getLandmarks() {
+    return this->landmarks;
+}
