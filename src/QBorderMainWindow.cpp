@@ -472,6 +472,7 @@ void QBorderMainWindow::performFaceVerification(int isSketch) {
                 persons.at(index).setLandmarks(wantedPersonsLandmarkPointsList.at(index));
                 persons.at(index).setPhotoPath(name);
                 result.persons.push_back(persons.at(index));
+                result.foundMethod = 1;
             }
         } else if(partialMatchedIndex != -1) {
             char numstr[21]; // enough to hold all numbers up to 64-bits
@@ -484,6 +485,7 @@ void QBorderMainWindow::performFaceVerification(int isSketch) {
                 persons.at(index).setPhotoPath(name);
                 persons.at(index).setLandmarks(wantedPersonsLandmarkPointsList.at(index));
                 result.persons.push_back(persons.at(index));
+                result.foundMethod = 2;
             }
         }
     }

@@ -174,7 +174,7 @@ void Server::sendResult(Result result) {
     this->sendPersonNum = this->sendPersonList.size();
     this->sendNum = -1;
     QDataStream sendOut(&outBlock, QIODevice::WriteOnly);
-    sendOut << this->sendPersonNum;
+    sendOut << this->sendPersonNum << result.foundMethod;
     clientConnection->write(outBlock, outBlock.size());
     outBlock.resize(0);
     qDebug() << "sendResult init. sendNum is" << this->sendNum;

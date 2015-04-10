@@ -11,6 +11,7 @@ public:
     void setSynPhoto(std::string synPhoto);
     std::string synPhoto;
     std::vector<Person> persons;
+    int foundMethod;
 };
 
 #endif // RESULT_H
