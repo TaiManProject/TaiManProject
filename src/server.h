@@ -21,13 +21,13 @@ public:
 
 protected:
     QString picName = "../data/rcve.jpg";
-    int loadSize = 1024 * 4;
+    const int loadSize = 1024 * 4;
 
 private slots:
     void sessionOpened();
     void rcveData();
     void newConnection();
-    void sendPicture(Result result);
+//    void sendPicture(Result result);
     void updateClientProgress(qint64 bytes);
     void sendResult(Result result);
     void sendPerson();

@@ -75,6 +75,7 @@ private slots:
 
 private:
 //    void updateUI();
+    int numOfPerson = 5;
     void loadWantedPersons();
     QStringList getWantedPersonQStringListFromFile(QString filePath);
     void performFaceVerification(int isSketch);

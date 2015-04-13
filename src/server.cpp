@@ -93,8 +93,8 @@ void Server::rcveData(){
             return;
         in  >> isSketch;
         qDebug() << isSketch;
-//        in >> isSketch;
-//        qDebug() << isSketch;
+        //        in >> isSketch;
+        //        qDebug() << isSketch;
         totalSize += sizeof(int) ;
         bytesReceived += sizeof(int);
     }
@@ -112,26 +112,27 @@ void Server::rcveData(){
     }
 }
 
-void Server::sendPicture(Result result) {
-    qDebug() << "sendSynPhoto";
-    sendFile = new QFile(QString::fromStdString(result.synPhoto));
-    connect(clientConnection, SIGNAL(bytesWritten(qint64)), this, SLOT(updateClientProgress(qint64)));
-    if(!sendFile->open(QFile::ReadOnly)){
-        qDebug() << "Failed to open File";
-    } else {
-        totalSendBytes = sendFile->size();
-        qDebug() << totalSendBytes;
-        bytesWritten = 0;
-        bytesToWrite = 0;
-        outBlock.resize(0);
-        QDataStream sendOut(&outBlock, QIODevice::WriteOnly);
-        sendOut << totalSendBytes;
-        clientConnection->write(outBlock, outBlock.size());
-        bytesToWrite = totalSendBytes ;
-        outBlock.resize(0);
-    }
-    qDebug() << "send over";
-}
+//void Server::sendPicture(Result result) {
+//    qDebug() << "sendSynPhoto";
+//    Person synPerson = result.synPerson;
+//    sendFile = new QFile(QString::fromStdString(synPerson.getPhotoPath()));
+//    connect(clientConnection, SIGNAL(bytesWritten(qint64)), this, SLOT(updateClientProgress(qint64)));
+//    if(!sendFile->open(QFile::ReadOnly)){
+//        qDebug() << "Failed to open File";
+//    } else {
+//        totalSendBytes = sendFile->size();
+//        qDebug() << totalSendBytes;
+//        bytesWritten = 0;
+//        bytesToWrite = 0;
+//        outBlock.resize(0);
+//        QDataStream sendOut(&outBlock, QIODevice::WriteOnly);
+//        sendOut << totalSendBytes;
+//        clientConnection->write(outBlock, outBlock.size());
+//        bytesToWrite = totalSendBytes ;
+//        outBlock.resize(0);
+//    }
+//    qDebug() << "send over";
+//}
 
 void Server::sendPerson() {
     if (this->sendNum >= sendPersonNum) {
@@ -143,26 +144,29 @@ void Server::sendPerson() {
     qDebug() << "sendPerson " << this->sendNum;
     Person p = sendPersonList.at(this->sendNum);
     sendFile = new QFile(QString::fromStdString(p.getPhotoPath()));
+    connect(clientConnection, SIGNAL(bytesWritten(qint64)), this, SLOT(updateClientProgress(qint64)));
     if(!sendFile->open(QFile::ReadOnly)) {
         qDebug() << "Failed to open File:";// << QString.fromStdString(p.getPhotoPath());
     } else {
         totalSendBytes = sendFile->size();
         qDebug() << totalSendBytes;
         QDataStream sendOut(&outBlock, QIODevice::WriteOnly);
-//        QByteArray msg = QString::fromStdString(p.getInfo()).toUtf8();
+        //        QByteArray msg = QString::fromStdString(p.getInfo()).toUtf8();
         QByteArray msg = QByteArray(p.getInfo().c_str());
-        qDebug() << msg.size() << msg << totalSendBytes;
         std::vector<double> similarities = p.getSimilarities();
         sendOut /*<< msg.size() */<< msg  << (int)similarities.size();
+        qDebug() << msg.size() << msg << (int)similarities.size();
         for(int i = 0; i < similarities.size(); i++) {
             sendOut << similarities.at(i);
         }
         std::vector<cv::Point2d> landmarks = p.getLandmarks();
         sendOut << (int)landmarks.size();
+        qDebug() << (int)landmarks.size();
         for(int i = 0; i < landmarks.size(); i++) {
             sendOut<<(int)landmarks.at(i).x << (int)landmarks.at(i).y;
         }
         sendOut << totalSendBytes;
+        qDebug() << totalSendBytes;
         clientConnection->write(outBlock, outBlock.size());
         bytesToWrite = totalSendBytes ;
         outBlock.resize(0);
@@ -171,14 +175,16 @@ void Server::sendPerson() {
 
 void Server::sendResult(Result result) {
     this->sendPersonList = result.persons;
+    this->sendPersonList.insert(this->sendPersonList.begin(),result.synPerson);
     this->sendPersonNum = this->sendPersonList.size();
-    this->sendNum = -1;
+    this->sendNum = 0;
     QDataStream sendOut(&outBlock, QIODevice::WriteOnly);
     sendOut << this->sendPersonNum << result.foundMethod;
     clientConnection->write(outBlock, outBlock.size());
     outBlock.resize(0);
     qDebug() << "sendResult init. sendNum is" << this->sendNum;
-    sendPicture(result);
+    //    sendPicture(result);
+    sendPerson();
 }
 
 

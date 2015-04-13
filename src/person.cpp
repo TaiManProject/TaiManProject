@@ -2,7 +2,11 @@
 
 Person::Person()
 {
-
+    this->full = IntDouble();
+    this->partial = IntDouble();
+    this->photoPath = "";
+    this->landmarks = std::vector<cv::Point2d>();
+    this->similarities = std::vector<double>();
 }
 
 Person::~Person()
@@ -29,7 +33,7 @@ IntDouble Person::getParital(){
 std::string Person::getInfo(){
     char c[200];
     std::sprintf(c, "Full similarity:\t%.2f\tConfidence:\t%.2f\nPartial similarity:\t%.2f\tConfidence:\t%.2f", this->full.d, this->full.confidence, this->partial.d, this->partial.confidence);
-    std::cout << c << "###" << std::endl;
+//    std::cout << c << "###" << std::endl;
 //    return c;
     return std::string(c);
 }

@@ -21,7 +21,6 @@ public:
     std::vector<double> getSimilarities();
     void setLandmarks(std::vector<cv::Point2d> landmarks);
     std::vector<cv::Point2d> getLandmarks();
-
 private:
     IntDouble full;
     IntDouble partial;

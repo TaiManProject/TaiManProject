@@ -243,7 +243,7 @@ void QBorderMainWindow::faceSynthesizeCompleted() {
     //    commonTool.log("22222233355"+QString::number(wantedPersonsSynthesized.size()));
     commonTool.log("QBorderMainWindow::faceSynthesizeCompleted() --- Done!!!");
 
-//    performFaceVerification();
+    //    performFaceVerification();
 }
 
 
@@ -462,8 +462,9 @@ void QBorderMainWindow::performFaceVerification(int isSketch) {
         commonTool.log(QString("partialMatchedIndex --> %1").arg(partialMatchedIndex));
 
         if(matchedIndex != -1){
+            result.foundMethod = 1;
             char numstr[21]; // enough to hold all numbers up to 64-bits
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < numOfPerson; i++) {
                 sprintf(numstr, "%d", i);
                 string name = "../data/person";
                 name = name + numstr + ".jpg";
@@ -472,11 +473,11 @@ void QBorderMainWindow::performFaceVerification(int isSketch) {
                 persons.at(index).setLandmarks(wantedPersonsLandmarkPointsList.at(index));
                 persons.at(index).setPhotoPath(name);
                 result.persons.push_back(persons.at(index));
-                result.foundMethod = 1;
             }
         } else if(partialMatchedIndex != -1) {
+            result.foundMethod = 2;
             char numstr[21]; // enough to hold all numbers up to 64-bits
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < numOfPerson; i++) {
                 sprintf(numstr, "%d", i);
                 string name = "../data/person";
                 name = name + numstr + ".jpg";
@@ -485,11 +486,9 @@ void QBorderMainWindow::performFaceVerification(int isSketch) {
                 persons.at(index).setPhotoPath(name);
                 persons.at(index).setLandmarks(wantedPersonsLandmarkPointsList.at(index));
                 result.persons.push_back(persons.at(index));
-                result.foundMethod = 2;
             }
         }
     }
-//    updateUI();
 }
 
 bool intDouble_less(IntDouble const& a, IntDouble const& b) {
@@ -498,7 +497,6 @@ bool intDouble_less(IntDouble const& a, IntDouble const& b) {
 
 void QBorderMainWindow::findFace(int isSketch, QString selectedFile) {
     qDebug() << "findFace begin\n" << selectedFile;
-    result = Result();
     if (selectedFile.size() != 0) {
         cv::Mat selectedGrayImg;
         {
@@ -521,19 +519,22 @@ void QBorderMainWindow::findFace(int isSketch, QString selectedFile) {
         inputPersonFileName = f.fileName();
         inputPersonLandmarkPoints = landmarkPoints;
         commonTool.log("QBorderMainWindow::face Alignment Completed!");
+        Person synPerson;
+        synPerson.setLandmarks(inputPersonLandmarkPoints);
         if(isSketch == 1){
-            if (/*inputPersonFileName.contains("Mp", Qt::CaseSensitive) && */isAbleToSynthesizeInputPerson) {
+            if (isAbleToSynthesizeInputPerson) {
                 faceSynthesisManager.synthesize(inputPerson);
                 inputPersonSynthesized = faceSynthesisManager.FaceSynthesisManager::getSysthesizedImg();
                 cv::imwrite("../data/inputPersonSynthesized.jpg",inputPersonSynthesized);
-                result.setSynPhoto("../data/inputPersonSynthesized.jpg");
+                synPerson.setPhotoPath("../data/inputPersonSynthesized.jpg");
                 inputPersonSynthesizedReady = true;
                 commonTool.log("QBorderMainWindow::Input Person Synthesized!");
             }
         } else {
-            result.setSynPhoto("../data/SynNotShown.jpg");
+            synPerson.setPhotoPath("../data/inputPerson.jpg");
         }
-
+        result = Result();
+        result.setSynPerson(synPerson);
         performFaceVerification(isSketch);
         emit faceFound(result);
     }

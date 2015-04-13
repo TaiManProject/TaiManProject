@@ -2,14 +2,14 @@
 #define RESULT_H
 #include "person.h"
 #include <string>
-#include<vector>
+#include <vector>
 
 class Result
 {
 public:
     Result();
-    void setSynPhoto(std::string synPhoto);
-    std::string synPhoto;
+    void setSynPerson(Person synPerson);
+    Person synPerson;
     std::vector<Person> persons;
     int foundMethod;
 };
