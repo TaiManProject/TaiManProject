@@ -207,3 +207,7 @@ void Server::updateClientProgress(qint64 bytes){
         sendPerson();
     }
 }
+
+void Server::faceNotFound() {
+    clientConnection->abort();
+}

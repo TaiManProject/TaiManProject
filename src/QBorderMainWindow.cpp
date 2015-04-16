@@ -512,6 +512,8 @@ void QBorderMainWindow::findFace(int isSketch, QString selectedFile) {
         fa.alignStasm4(selectedGrayImg, alignedFace, landmarkPoints, centerOfLandmarks);
         if (alignedFace.empty()){
             commonTool.log("Error importing input person ...");
+            emit faceNotFound();
+            return;
         }
         inputPerson = alignedFace;
         cv::imwrite("../data/inputPerson.jpg",inputPerson);

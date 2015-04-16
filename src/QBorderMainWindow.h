@@ -68,6 +68,7 @@ public slots:
     void findFace(int isSketch, QString selectedFile);
 signals:
     void faceFound(Result result);
+    void faceNotFound();
 
 private slots:
     void trainFaceSynthesizeCompleted();

@@ -31,6 +31,7 @@ private slots:
     void updateClientProgress(qint64 bytes);
     void sendResult(Result result);
     void sendPerson();
+    void faceNotFound();
 
 private:
     QTcpServer *tcpServer;
